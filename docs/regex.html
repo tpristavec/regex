@@ -1,19 +1,27 @@
----
-title: "Regex in R"
-author: "Teja Pristavec"
-institute: "UVA BII SDAD"
-date: "`r Sys.Date()`"
-output:
-  xaringan::moon_reader:
-    css: [default, metropolis, metropolis-fonts]
-    lib_dir: libs
-    nature:
-      ratio: 16:9
-      highlightStyle: github
-      highlightLines: true
-      countIncrementalSlides: false
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+  <head>
+    <title>Regex in R</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Teja Pristavec" />
+    <meta name="date" content="2019-05-25" />
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
+    <link href="libs/countdown-0.2.0/countdown.css" rel="stylesheet" />
+    <script src="libs/countdown-0.2.0/countdown.js"></script>
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Regex in R
+### Teja Pristavec
+### UVA BII SDAD
+### 2019-05-25
 
 ---
+
 class: 
 
 # Regular expressions
@@ -43,7 +51,7 @@ background-size: 65%
 
 ---
 # Some common R functions
-<br/>
+&lt;br/&gt;
 
 | Function   | Base                          | Stringr                   |
 |------------|-------------------------------|---------------------------|
@@ -53,12 +61,12 @@ background-size: 65%
 | Locate     | `gregexpr`, `regexpr`         | `str_locate`              |
 | Split      | `strsplit`                    | `str_split`               |
 
-<br/>
+&lt;br/&gt;
 Lengthy comparison [here](https://stringr.tidyverse.org/articles/from-base.html). 
 ---
 class: center
 # Here's what it looks like
-<br>
+&lt;br&gt;
 
 ![](images/1example.png)
 
@@ -96,10 +104,11 @@ class: inverse, center, middle
 
 .pull-left[
 **Example**
-```{r example1, eval = FALSE}
+
+```r
 library(stringr)
 
-hex <- c("#FFFFFF", "#CE9F9F", "#000000")
+hex &lt;- c("#FFFFFF", "#CE9F9F", "#000000")
 
 str_extract_all(hex, "[0-9]")
 str_extract_all(hex, "[A-Z][0-9]")
@@ -110,7 +119,27 @@ str_extract_all(hex, "[A-Z][0-9]")
 .pull-right[
 **Output**
 
-```{r example1-out, ref.label = "example1", echo = FALSE}
+
+```
+## [[1]]
+## character(0)
+## 
+## [[2]]
+## [1] "9" "9"
+## 
+## [[3]]
+## [1] "0" "0" "0" "0" "0" "0"
+```
+
+```
+## [[1]]
+## character(0)
+## 
+## [[2]]
+## [1] "E9" "F9"
+## 
+## [[3]]
+## character(0)
 ```
 ]
 ---
@@ -138,8 +167,9 @@ The `+`, `*`, and `?` quantifiers are greed by default. This means they will mat
 
 .pull-left[
 **Example**
-```{r example2, eval = FALSE}
-hex <- c("#FFFFFF", "#CE9F9F", "#000000")
+
+```r
+hex &lt;- c("#FFFFFF", "#CE9F9F", "#000000")
 
 str_extract_all(hex, "[0-9]")
 str_extract_all(hex, "[0-9]+")
@@ -151,7 +181,31 @@ str_detect(hex, "[:digit:]{3,}")
 .pull-right[
 **Output**
 
-```{r example2-out, ref.label = "example2", echo = FALSE}
+
+```
+## [[1]]
+## character(0)
+## 
+## [[2]]
+## [1] "9" "9"
+## 
+## [[3]]
+## [1] "0" "0" "0" "0" "0" "0"
+```
+
+```
+## [[1]]
+## character(0)
+## 
+## [[2]]
+## [1] "9" "9"
+## 
+## [[3]]
+## [1] "000000"
+```
+
+```
+## [1] FALSE FALSE  TRUE
 ```
 ]
 ---
@@ -184,8 +238,9 @@ To use a metacharacter (`(`, `)`, `[`, `]`, `{`, `}`, `^`, `$`, `.`, `\`, `?`, `
 
 .pull-left[
 **Example**
-```{r example3, eval = FALSE}
-bateman <- c("I live in the American Gardens building
+
+```r
+bateman &lt;- c("I live in the American Gardens building
              on West 81st street.")
 
 str_locate_all(bateman, "\\s[A-Z]")
@@ -197,7 +252,18 @@ str_extract_all(bateman, "[:blank:][A-Z][a-z]+")
 .pull-right[
 **Output**
 
-```{r example3-out, ref.label = "example3", echo = FALSE}
+
+```
+## [[1]]
+##      start end
+## [1,]    14  15
+## [2,]    23  24
+## [3,]    56  57
+```
+
+```
+## [[1]]
+## [1] " American" " Gardens"  " West"
 ```
 ]
 
@@ -211,15 +277,16 @@ str_extract_all(bateman, "[:blank:][A-Z][a-z]+")
 | `\b`    | Match at word boundary.                              |
 | `\B`    | Match at word non-boundary.                          |
 | `(   )` | Match this group.                                    |
-| <code> &#124; </code>      | Match the symbol before or after. |
+| &lt;code&gt; &amp;#124; &lt;/code&gt;      | Match the symbol before or after. |
 | `\`     | Escape the next character.                           |
 
 ---
 # Position and order
 
 **Example**
-```{r example4, eval = FALSE}
-bateman <- c("I live in the American Gardens building on West 81st street.")
+
+```r
+bateman &lt;- c("I live in the American Gardens building on West 81st street.")
 
 str_extract_all(bateman, "[:alnum:]*t[:alnum:]*")
 str_extract_all(bateman, "[:alnum:]*t\\b")
@@ -228,7 +295,15 @@ str_extract_all(bateman, "[:alnum:]*t\\b")
 --
 **Output**
 
-```{r example4-out, ref.label = "example4", echo = FALSE}
+
+```
+## [[1]]
+## [1] "the"    "West"   "81st"   "street"
+```
+
+```
+## [[1]]
+## [1] "West"   "81st"   "street"
 ```
 
 ---
@@ -241,15 +316,15 @@ Lookarounds will look ahead or behind before attempting to capture or locate any
 For example, we might be working with a text that talks about a **bank** robber who ran towards the river **bank** with his bounty, but we're only interested in capturing something about the robber and not so much in the river. A lookaround would help us limit our search. 
 
 --
-<br>
-<br>
+&lt;br&gt;
+&lt;br&gt;
 
 | Symbol        | Function  
 |---------------|----------------------------------------------------------------------------------|
 | `(?=query)`   | + lookahead: "query" immediately follows the current position.                     |
 | `(?!query)`   | - lookahead: "query" does _not_ immediately follow the current position.  |
-| `(?<=query)`  | + lookbehind: "query" immediately precedes the current position.                   |
-| `(?<!query)`  | - lookbehind: "query" does _not_ immediately precede the current position.|
+| `(?&lt;=query)`  | + lookbehind: "query" immediately precedes the current position.                   |
+| `(?&lt;!query)`  | - lookbehind: "query" does _not_ immediately precede the current position.|
 
 ---
 class: inverse, center, middle
@@ -259,16 +334,16 @@ class: inverse, center, middle
 ---
 class: inverse, center, middle
 
-```{r, include = FALSE}
-library(countdown)
-```
+
 
 # http://play.inginf.units.it
-If the website above is down... <br />
-https://alf.nu/RegexGolf <br />
+If the website above is down... &lt;br /&gt;
+https://alf.nu/RegexGolf &lt;br /&gt;
 https://regex.sketchengine.co.uk/cgi/ex1.cgi
 
-`r countdown(minutes = 15, seconds = 00, play_sound = TRUE, font_size = "70px", color_text = "#23373B", color_background = "#FFFFFF", color_running_background = "#FFFFFF", color_running_text = "#23373B", color_finished_background = "#FFFFFF", color_finished_text = "#23373B", top = "60%")`
+<div class="countdown" id="timer_5ce986e0" style="top:60%;right:0;font-size:70px;" data-audio="true">
+<code><span class="digits minutes">15</span><span class="digits colon">:</span><span class="digits seconds">00</span></code>
+</div>
 
 
 
@@ -288,16 +363,29 @@ You might write the perfect search pattern to suit your use case, but you will l
 
 .pull-left[
 Install and load the `rex` library.
-```{r example5, results = "hide"}
+
+```r
 # install.packages("rex")
 library(rex)
+```
+
+```
+## 
+## Attaching package: 'rex'
+```
+
+```
+## The following object is masked from 'package:stringr':
+## 
+##     regex
 ```
 ]
 
 --
 .pull-right[
 Check out some of the available `rex` tools:
-```{r, results = "hide"}
+
+```r
 names(shortcuts)
 ?wildcards
 ?lookarounds
@@ -309,9 +397,24 @@ Type `?rex` to get access the package index and vignettes.
 # Insta-regex
 Some canned, R-ready regex is available in `qdapRegex` (see [here](http://trinker.github.io/qdapRegex/index.html)).
 
-```{r, results = "hide"}
+
+```r
 # install.packages("qdapRegex")
 library(qdapRegex)
+```
+
+```
+## 
+## Attaching package: 'qdapRegex'
+```
+
+```
+## The following object is masked from 'package:rex':
+## 
+##     escape
+```
+
+```r
 ?qdapRegex
 ```
 
@@ -331,3 +434,95 @@ library(qdapRegex)
 # Presentation best practices :)
 
 Slides via [**xaringan**](https://github.com/yihui/xaringan), xaringan via [remark.js](https://remarkjs.com), [knitr](http://yihui.name/knitr), and [R Markdown](https://rmarkdown.rstudio.com).
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();</script>
+
+<script>
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

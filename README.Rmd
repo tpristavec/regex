@@ -2,7 +2,7 @@
 title: "Regex in R"
 author: "Teja Pristavec"
 date: "5/25/2019"
-output: github_document
+output: rmarkdown::github_document
 ---
 
 ## R Markdown

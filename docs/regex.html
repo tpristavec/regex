@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+  <head>
+    <title>Regex in R</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Teja Pristavec" />
+    <meta name="date" content="2019-05-25" />
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
+    <link href="libs/countdown-0.2.0/countdown.css" rel="stylesheet" />
+    <script src="libs/countdown-0.2.0/countdown.js"></script>
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Regex in R
+### Teja Pristavec
+### UVA BII SDAD
+### 2019-05-25
+
+---
+
+class: 
+
+# Regular expressions
+A [regular expression](https://en.wikipedia.org/wiki/Regular_expression) (regex) is a sequence of characters that define a search pattern.
+
+--
+
+Regex can be used across multiple programming languages to help identify, match, extract, locate, replace, split, ... patterns from text. 
+
+--
+
+background-image: url(images/4why1.png)
+background-position: 50% 90%
+background-size: 70%
+
+--
+
+background-image: url(images/4why2.png)
+background-position: 50% 90%
+background-size: 45%
+
+--
+
+background-image: url(images/4why3.jpg)
+background-position: 50% 90%
+background-size: 65%
+
+---
+# Some common R functions
+&lt;br/&gt;
+
+| Function   | Base                          | Stringr                   |
+|------------|-------------------------------|---------------------------|
+| Extract    | `regmatches`                  | `str_extract`, `str_match`|
+| Detect     | `grep`, `grepl`               | `str_detect`, `str_sub`   |
+| Substitute | `gsub`, `sub`                 | `str_replace`, `str_sub`  |
+| Locate     | `gregexpr`, `regexpr`         | `str_locate`              |
+| Split      | `strsplit`                    | `str_split`               |
+
+&lt;br/&gt;
+Lengthy comparison [here](https://stringr.tidyverse.org/articles/from-base.html). 
+---
+class: center
+# Here's what it looks like
+&lt;br&gt;
+
+![](images/1example.png)
+
+---
+class: inverse
+
+background-image: url(images/3cry.jpeg)
+background-position: 50% 30%
+background-size: 42%
+
+---
+class: inverse, center, middle
+
+# A quick tour of what's out there
+
+---
+# Characters
+
+| Symbol                                         | Function                                       |
+|------------------------------------------------|------------------------------------------------|
+| `[ ]`                                          | Match character within square brackets.        |
+| `[^ ]`                                         | Match character not within square brackets.    |
+| `[0-9]`, `[:digit:]`, `\d`                     | Match number.                                  |
+| `[^0-9]`, `\D`                                 | Match non-number.                              |
+| `[a-z]`, `[:lower:]`                           | Match lowercase character.                     |
+| `[A-Z]`, `[:upper:]`                           | Match uppercase character.                     |
+| `[A-z]`, `[[:lower:][:upper:]]`, `[:alpha:]`   | Match alphabetic character.                    |
+| `[A-z0-9]`, `[[:alpha:][:digit:]]`, `[:alnum:]`| Match alphanumeric character.                  |
+| `\w`, `[A-z0-9_]`, `[[:alnum:]_]`              | Match word characters.                         |
+| `\W`, `[^A-z0-9_]`                             | Match non-word characters.                    |
+| `[:punct:]`                                    | Match punctuation characters.                 |
+
+---
+# Characters
+
+.pull-left[
+**Example**
+
+```r
+library(stringr)
+
+hex &lt;- c("#FFFFFF", "#CE9F9F", "#000000")
+
+str_extract_all(hex, "[0-9]")
+str_extract_all(hex, "[A-Z][0-9]")
+```
+]
+
+--
+.pull-right[
+**Output**
+
+
+```
+## [[1]]
+## character(0)
+## 
+## [[2]]
+## [1] "9" "9"
+## 
+## [[3]]
+## [1] "0" "0" "0" "0" "0" "0"
+```
+
+```
+## [[1]]
+## character(0)
+## 
+## [[2]]
+## [1] "E9" "F9"
+## 
+## [[3]]
+## character(0)
+```
+]
+---
+# Quantity
+
+| Symbol    | Function                                                             |
+|-----------|----------------------------------------------------------------------|
+| `x-y`     | Match this character range.                                          |
+| `.`       | Match any single character (except new line).                        |
+| `?`       | The previous symbol is optional.                                     |
+| `*`       | Match 0+ previous symbol repetitions.                                |
+| `+`       | Match 1+ previous symbol repetitions.                                |
+| `{x}`     | Match exactly x repetitions of the previous symbol.                  |
+| `{x, }`   | Match at least x repetitions of the previous symbol.                 |
+| `{ , x}`  | Match at most x repetitions of the previous symbol.                  |
+| `{x , y}` | Match between x and y repetitions (inclusive) of the previous symbol.|
+
+
+.footnote[
+The `+`, `*`, and `?` quantifiers are greed by default. This means they will match as many characters as possible. To make them lazy/reluctant, causing them to capture as few characters as possible, append a `?` (`+?`, `*?`, `??`).
+]
+
+---
+# Quantity
+
+.pull-left[
+**Example**
+
+```r
+hex &lt;- c("#FFFFFF", "#CE9F9F", "#000000")
+
+str_extract_all(hex, "[0-9]")
+str_extract_all(hex, "[0-9]+")
+str_detect(hex, "[:digit:]{3,}")
+```
+]
+
+--
+.pull-right[
+**Output**
+
+
+```
+## [[1]]
+## character(0)
+## 
+## [[2]]
+## [1] "9" "9"
+## 
+## [[3]]
+## [1] "0" "0" "0" "0" "0" "0"
+```
+
+```
+## [[1]]
+## character(0)
+## 
+## [[2]]
+## [1] "9" "9"
+## 
+## [[3]]
+## [1] "000000"
+```
+
+```
+## [1] FALSE FALSE  TRUE
+```
+]
+---
+class: center
+# Escape
+
+To use a metacharacter (`(`, `)`, `[`, `]`, `{`, `}`, `^`, `$`, `.`, `\`, `?`, `*`, `+`, `|`), you'll have to "escape" it first. 
+
+![](images/2dash.jpg)
+
+---
+# Spaces
+
+| Symbol             | Function                                                                           |
+|--------------------|------------------------------------------------------------------------------------|
+| `[:blank:]`        | Match any blank character (space, tab).                                            |
+| `[:space:]`        | Match any space character (space, tab, new line, vertical tab, form feed, return). |
+| `\s`               | Match any space.                                                                   |
+| `\S`               | Match any non-space.                                                               |
+| `\h`               | Match any horizontal space.                                                        |
+| `\H`               | Match any non-horizontal space.                                                    |
+| `\v`               | Match any vertical space.                                                          |
+| `\V`               | Match any non-vertical space.                                                      |
+| `\n`               | Match any new line.                                                               |
+| `\r`               | Match any carriage return.                                                         |
+| `\t`               | Match any tab.                                                                     |
+
+---
+# Spaces
+
+.pull-left[
+**Example**
+
+```r
+bateman &lt;- c("I live in the American Gardens building
+             on West 81st street.")
+
+str_locate_all(bateman, "\\s[A-Z]")
+str_extract_all(bateman, "[:blank:][A-Z][a-z]+")
+```
+]
+
+--
+.pull-right[
+**Output**
+
+
+```
+## [[1]]
+##      start end
+## [1,]    14  15
+## [2,]    23  24
+## [3,]    56  57
+```
+
+```
+## [[1]]
+## [1] " American" " Gardens"  " West"
+```
+]
+
+---
+# Position and order
+
+| Symbol  | Function  
+|---------|------------------------------------------------------|
+| `^`     | Match at string beginning.                           |
+| `$`     | Match at string end.                                 |
+| `\b`    | Match at word boundary.                              |
+| `\B`    | Match at word non-boundary.                          |
+| `(   )` | Match this group.                                    |
+| &lt;code&gt; &amp;#124; &lt;/code&gt;      | Match the symbol before or after. |
+| `\`     | Escape the next character.                           |
+
+---
+# Position and order
+
+**Example**
+
+```r
+bateman &lt;- c("I live in the American Gardens building on West 81st street.")
+
+str_extract_all(bateman, "[:alnum:]*t[:alnum:]*")
+str_extract_all(bateman, "[:alnum:]*t\\b")
+```
+
+--
+**Output**
+
+
+```
+## [[1]]
+## [1] "the"    "West"   "81st"   "street"
+```
+
+```
+## [[1]]
+## [1] "West"   "81st"   "street"
+```
+
+---
+# Lookarounds
+
+Lookarounds will look ahead or behind before attempting to capture or locate any pattern. 
+
+--
+
+For example, we might be working with a text that talks about a **bank** robber who ran towards the river **bank** with his bounty, but we're only interested in capturing something about the robber and not so much in the river. A lookaround would help us limit our search. 
+
+--
+&lt;br&gt;
+&lt;br&gt;
+
+| Symbol        | Function  
+|---------------|----------------------------------------------------------------------------------|
+| `(?=query)`   | + lookahead: "query" immediately follows the current position.                     |
+| `(?!query)`   | - lookahead: "query" does _not_ immediately follow the current position.  |
+| `(?&lt;=query)`  | + lookbehind: "query" immediately precedes the current position.                   |
+| `(?&lt;!query)`  | - lookbehind: "query" does _not_ immediately precede the current position.|
+
+---
+class: inverse, center, middle
+
+# Let's try it out!
+
+---
+class: inverse, center, middle
+
+
+
+# http://play.inginf.units.it
+
+<div class="countdown" id="timer_5ce97285" style="top:50%;left:35%;font-size:70px;" data-audio="true">
+<code><span class="digits minutes">15</span><span class="digits colon">:</span><span class="digits seconds">00</span></code>
+</div>
+
+---
+class: inverse, center, middle
+
+# Help!
+
+---
+# Intuitive regex
+
+**Rex** is a nifty library that helps you build easily modifiable regex queries. 
+
+You might write the perfect search pattern to suit your use case, but you will likely end up with something three times the length of  `(?:\\.(?:[a-z0-9\u00a1-\uffff](?:-)*)` that will be difficult to interpret to a colleague, or to you after you haven't touched the code in six months.
+
+--
+
+.pull-left[
+Install and load the `rex` library.
+
+```r
+# install.packages("rex")
+library(rex)
+```
+
+```
+## 
+## Attaching package: 'rex'
+```
+
+```
+## The following object is masked from 'package:stringr':
+## 
+##     regex
+```
+]
+
+--
+.pull-right[
+Check out some of the available `rex` tools:
+
+```r
+names(shortcuts)
+?wildcards
+?lookarounds
+```
+
+Type `?rex` to get access the package index and vignettes.
+]
+---
+# Insta-regex
+Some canned, R-ready regex is available in `qdapRegex` (see [here](http://trinker.github.io/qdapRegex/index.html)).
+
+
+```r
+# install.packages("qdapRegex")
+library(qdapRegex)
+```
+
+```
+## 
+## Attaching package: 'qdapRegex'
+```
+
+```
+## The following object is masked from 'package:rex':
+## 
+##     escape
+```
+
+```r
+?qdapRegex
+```
+
+---
+# More
+
+## Practice
+[RegexOne lessons](https://regexone.com/), [FreeCodeCamp lessons](https://scrimba.com/g/gregularexpressions).
+
+## Test query + canned regex
+[Regex101](https://regex101.com/), [RegexR](https://regexr.com/), [Debuggex](https://www.debuggex.com/).
+
+## Games
+[The regex game](http://play.inginf.units.it/#/), [regex crossword](https://regexcrossword.com/).
+
+---
+# Presentation best practices :)
+
+Slides via [**xaringan**](https://github.com/yihui/xaringan), xaringan via [remark.js](https://remarkjs.com), [knitr](http://yihui.name/knitr), and [R Markdown](https://rmarkdown.rstudio.com).
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();</script>
+
+<script>
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

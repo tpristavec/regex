@@ -113,6 +113,7 @@ str_extract_all(hex, "[A-Z][0-9]")
 ```{r example1-out, ref.label = "example1", echo = FALSE}
 ```
 ]
+
 ---
 # Quantity
 
@@ -154,6 +155,7 @@ str_detect(hex, "[:digit:]{3,}")
 ```{r example2-out, ref.label = "example2", echo = FALSE}
 ```
 ]
+
 ---
 class: center
 # Escape
@@ -254,27 +256,6 @@ For example, we might be working with a text that talks about a **bank** robber 
 ---
 class: inverse, center, middle
 
-# Let's try it out!
-
----
-class: inverse, center, middle
-
-```{r, include = FALSE}
-library(countdown)
-```
-
-# http://play.inginf.units.it
-If the website above is down... <br />
-https://alf.nu/RegexGolf <br />
-https://regex.sketchengine.co.uk/cgi/ex1.cgi
-
-`r countdown(minutes = 15, seconds = 00, play_sound = TRUE, font_size = "70px", color_text = "#23373B", color_background = "#FFFFFF", color_running_background = "#FFFFFF", color_running_text = "#23373B", color_finished_background = "#FFFFFF", color_finished_text = "#23373B", top = "60%")`
-
-
-
----
-class: inverse, center, middle
-
 # Help!
 
 ---
@@ -305,6 +286,7 @@ names(shortcuts)
 
 Type `?rex` to get access the package index and vignettes.
 ]
+
 ---
 # Insta-regex
 Some canned, R-ready regex is available in `qdapRegex` (see [here](http://trinker.github.io/qdapRegex/index.html)).
@@ -316,18 +298,31 @@ library(qdapRegex)
 ```
 
 ---
-# More
+class: inverse, center, middle
 
-## Practice
-[RegexOne lessons](https://regexone.com/), [FreeCodeCamp lessons](https://scrimba.com/g/gregularexpressions).
-
-## Test query + canned regex
-[Regex101](https://regex101.com/), [RegexR](https://regexr.com/), [Debuggex](https://www.debuggex.com/).
-
-## Games
-[The regex game](http://play.inginf.units.it/#/), [regex crossword](https://regexcrossword.com/).
+# Let's try it out!
 
 ---
-# Presentation best practices :)
+class: inverse, center, middle
 
+```{r, include = FALSE}
+library(countdown)
+```
+
+# http://play.inginf.units.it
+If the website above is down... <br />
+https://alf.nu/RegexGolf <br />
+https://regex.sketchengine.co.uk/cgi/ex1.cgi
+
+`r countdown(minutes = 30, seconds = 00, play_sound = TRUE, font_size = "70px", color_text = "#23373B", color_background = "#FFFFFF", color_running_background = "#FFFFFF", color_running_text = "#23373B", color_finished_background = "#FFFFFF", color_finished_text = "#23373B", top = "60%")`
+
+---
+# More
+
+## Fun
+* Practice: [RegexOne lessons](https://regexone.com/), [FreeCodeCamp lessons](https://scrimba.com/g/gregularexpressions).
+* Test query + canned regex: [Regex101](https://regex101.com/), [RegexR](https://regexr.com/), [Debuggex](https://www.debuggex.com/).
+* Games: [The regex game](http://play.inginf.units.it/#/), [regex crossword](https://regexcrossword.com/).
+
+## Presentation best practices :)
 Slides via [**xaringan**](https://github.com/yihui/xaringan), xaringan via [remark.js](https://remarkjs.com), [knitr](http://yihui.name/knitr), and [R Markdown](https://rmarkdown.rstudio.com).

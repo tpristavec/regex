@@ -16,6 +16,11 @@ output:
 ---
 class: 
 
+```{r, include = FALSE}
+devtools::install_github("gadenbuie/countdown")
+library(xaringan)
+```
+
 # Regular expressions
 A [regular expression](https://en.wikipedia.org/wiki/Regular_expression) (regex) is a sequence of characters that define a search pattern.
 
@@ -48,8 +53,8 @@ background-size: 65%
 | Function   | Base                          | Stringr                   |
 |------------|-------------------------------|---------------------------|
 | Extract    | `regmatches`                  | `str_extract`, `str_match`|
-| Detect     | `grep`, `grepl`               | `str_detect`, `str_sub`   |
-| Substitute | `gsub`, `sub`                 | `str_replace`, `str_sub`  |
+| Detect     | `grep`, `grepl`               | `str_which`, `str_detect` |
+| Substitute | `gsub`, `sub`, `substr`       | `str_replace`, `str_sub`  |
 | Locate     | `gregexpr`, `regexpr`         | `str_locate`              |
 | Split      | `strsplit`                    | `str_split`               |
 
@@ -131,7 +136,7 @@ str_extract_all(hex, "[A-Z][0-9]")
 
 
 .footnote[
-The `+`, `*`, and `?` quantifiers are greed by default. This means they will match as many characters as possible. To make them lazy/reluctant, causing them to capture as few characters as possible, append a `?` (`+?`, `*?`, `??`).
+The `+`, `*`, and `?` quantifiers are greed by default. This means they will match as many characters as possible. To make them lazy/reluctant, causing them to capture as few characters as possible, add a `?` (`+?`, `*?`, `??`).
 ]
 
 ---
@@ -248,10 +253,29 @@ For example, we might be working with a text that talks about a **bank** robber 
 
 | Symbol        | Function  
 |---------------|----------------------------------------------------------------------------------|
-| `(?=query)`   | + lookahead: "query" immediately follows the current position.                     |
-| `(?!query)`   | - lookahead: "query" does _not_ immediately follow the current position.  |
-| `(?<=query)`  | + lookbehind: "query" immediately precedes the current position.                   |
-| `(?<!query)`  | - lookbehind: "query" does _not_ immediately precede the current position.|
+| `(?=query)`   | Positive lookahead: "query" immediately follows the current position.            |
+| `(?!query)`   | Negative lookahead: "query" does _not_ immediately follow the current position.  |
+| `(?<=query)`  | Positive lookbehind: "query" immediately precedes the current position.          |
+| `(?<!query)`  | Negative lookbehind: "query" does _not_ immediately precede the current position.|
+
+---
+# Lookarounds
+
+**Example**
+```{r example6, eval = FALSE}
+patient <- "Name: Jane
+            Age: 25
+            Condition: OK"
+
+str_extract_all(patient, "(?<=Name: )")
+str_extract_all(patient, "(?<=Name: )\\w+")
+```
+
+--
+**Output**
+
+```{r example6-out, ref.label = "example6", echo = FALSE}
+```
 
 ---
 class: inverse, center, middle
@@ -269,7 +293,7 @@ You might write the perfect search pattern to suit your use case, but you will l
 
 .pull-left[
 Install and load the `rex` library.
-```{r example5, results = "hide"}
+```{r example7, results = "hide"}
 # install.packages("rex")
 library(rex)
 ```
